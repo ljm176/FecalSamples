@@ -61,6 +61,9 @@ def run(protocol):
             x = "A" + str(col+1)
             spot_then_dilute(plate[w], agar[w], 
                              plate[x], spot_vol)
+            #Spot final dilution
+            p20Multi.aspirate(spot_vol, plate[x])
+            spot(agar[x], spot_vol)
         p20Multi.drop_tip()
         
     for pl, ag in zip(dilutionPlates, agar_plates):
