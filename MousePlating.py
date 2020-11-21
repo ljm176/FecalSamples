@@ -33,7 +33,9 @@ def run(protocol):
     for p in range(16):
     	p1000Single.distribute(200, pooTubes.wells()[p], [dilutionPlates[0].wells()[p], 
     		dilutionPlates[1].wells()[p]] if p < 8 
-    		else [dilutionPlates[2].wells()[p], dilutionPlates[3].wells()[p]])
+    		else [dilutionPlates[2].wells()[p-8], dilutionPlates[3].wells()[p-8]])
+           
+            
         
     def spot(dest, spot_vol):
         """Takes a diluted transformed culture and spots the defined volume onto agar 
