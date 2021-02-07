@@ -1,7 +1,6 @@
 metadata = {
-    'protocolName': 'Mouse Study Plating and Dilution',
+    'protocolName': 'Fecal Plating and Dilution',
     'author': 'Lachlan <lajamu@biosustain.dtu.dk',
-    'source': 'Custom Protocol Request',
     'apiLevel': '2.2'
 }
 
