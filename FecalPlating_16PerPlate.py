@@ -32,18 +32,19 @@ def run(protocol):
     agar_plates = [protocol.load_labware(agar_plate_type, slot, label="Agar")
     				for slot in agar_locs]
 
-    pooWells = PooTubes1.wells() + PooTubes2.wells()
+    pooWells = PooTubes1.wells()[0:16] + PooTubes2.wells()[0:16]
 
     dest_wells_r1 = [item for l in [[x for x in dilutionPlates[y].wells()[0:8]] + [x for x in dilutionPlates[y].wells()[48:56]] for y in [0, 2]] for item in l]
     dest_wells_r2 = [item for l in [[x for x in dilutionPlates[y].wells()[0:8]] + [x for x in dilutionPlates[y].wells()[48:56]] for y in [1, 3]] for item in l]
 
 
-    for p in range(32):
-        p20Single.pick_up_tip(reversedTips[p])
-        p20Single.aspirate(20, pooWells[p])
-        p20Single.dispense(10, dest_wells_r1[p])
-        p20Single.dispense(10, dest_wells_r2[p])
-        p20Single.drop_tip()
+    def distribute_samples(start, stop):
+        for p in range(start, stop):
+            p20Single.pick_up_tip(reversedTips[p])
+            p20Single.aspirate(20, pooWells[p])
+            p20Single.dispense(10, dest_wells_r1[p])
+            p20Single.dispense(10, dest_wells_r2[p])
+            p20Single.drop_tip()
 
         
     def spot(dest, spot_vol):
@@ -51,7 +52,7 @@ def run(protocol):
         in a Nunc omnitray"""
 
         SAFE_HEIGHT = 15  
-        spotting_dispense_rate=0.025 
+        spotting_dispense_rate=0.25 
         p20Multi.move_to(dest.top(SAFE_HEIGHT))
         protocol.max_speeds["Z"] = 50
         p20Multi.move_to(dest.top(2))
@@ -72,17 +73,22 @@ def run(protocol):
             spot_then_dilute(plate[w], agar[w], 
                              plate[x], spot_vol)
             #Spot final dilution
-            p20Multi.aspirate(spot_vol, plate[x])
-            spot(agar[x], spot_vol)
+        p20Multi.aspirate(spot_vol, plate[x])
+        spot(agar[x], spot_vol)
         p20Multi.drop_tip()
 
     
     def spot_dilute_plate(plate, agar, spot_vol):
         for c in [1, 7]: spot_dilute_half_plate(plate, agar, spot_vol, c)
-        
-    for pl, ag in zip(dilutionPlates, agar_plates):
+    
+    distribute_samples(0, 16)
+    for pl, ag in zip(dilutionPlates[0:1], agar_plates[0:1]):
         spot_dilute_plate(pl, ag, 5)
-        
+    
+    distribute_samples(16, 32)
+    for pl, ag in zip(dilutionPlates[2:3], agar_plates[2:3]):
+        spot_dilute_plate(pl, ag, 5)
+
     protocol.comment("Run Complete!")
         
         
