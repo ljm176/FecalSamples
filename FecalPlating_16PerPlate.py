@@ -1,7 +1,7 @@
 metadata = {
     'protocolName': 'Fecal Plating and Dilution',
     'author': 'Lachlan <lajamu@biosustain.dtu.dk',
-    'apiLevel': '2.2'
+    'apiLevel': '2.9'
 }
 
 def run(protocol):
@@ -38,51 +38,51 @@ def run(protocol):
 
 
     for p in range(32):
-        p20Multi.pick_up_tip(reversedTips[p].top(), presses=2, increment = 0.1)
+        p20Multi.pick_up_tip(reversedTips[p].top(3), presses = 0)
         p20Multi.aspirate(20, pooWells[p])
         p20Multi.dispense(10, dest_wells_r1[p])
         p20Multi.dispense(10, dest_wells_r2[p])
         p20Multi.drop_tip()
 
         
-    def spot(dest, spot_vol):
-        """Takes a diluted transformed culture and spots the defined volume onto agar 
-        in a Nunc omnitray"""
+    # def spot(dest, spot_vol):
+    #     """Takes a diluted transformed culture and spots the defined volume onto agar 
+    #     in a Nunc omnitray"""
 
-        SAFE_HEIGHT = 15  
-        spotting_dispense_rate=0.025 
-        p20Multi.move_to(dest.top(SAFE_HEIGHT))
-        protocol.max_speeds["Z"] = 50
-        p20Multi.move_to(dest.top(2))
-        p20Multi.dispense(volume=spot_vol, rate=spotting_dispense_rate)
-        p20Multi.move_to(dest.top(0))
-        del protocol.max_speeds["Z"]
+    #     SAFE_HEIGHT = 15  
+    #     spotting_dispense_rate=0.025 
+    #     p20Multi.move_to(dest.top(SAFE_HEIGHT))
+    #     protocol.max_speeds["Z"] = 50
+    #     p20Multi.move_to(dest.top(2))
+    #     p20Multi.dispense(volume=spot_vol, rate=spotting_dispense_rate)
+    #     p20Multi.move_to(dest.top(0))
+    #     del protocol.max_speeds["Z"]
     
-    def spot_then_dilute(sourceCol, agar_dest, destcol, spot_vol):
-        p20Multi.aspirate(spot_vol, sourceCol)
-        spot(agar_dest, spot_vol)
-        p20Multi.transfer(10, sourceCol, destcol, mix_after=(5, 20), new_tip="never")
+    # def spot_then_dilute(sourceCol, agar_dest, destcol, spot_vol):
+    #     p20Multi.aspirate(spot_vol, sourceCol)
+    #     spot(agar_dest, spot_vol)
+    #     p20Multi.transfer(10, sourceCol, destcol, mix_after=(5, 20), new_tip="never")
 
-    def spot_dilute_half_plate(plate, agar, spot_vol, startCol):
-        p20Multi.pick_up_tip()
-        for col in range(startCol, startCol+5):
-            w = "A"+str(col)
-            x = "A" + str(col+1)
-            spot_then_dilute(plate[w], agar[w], 
-                             plate[x], spot_vol)
-            #Spot final dilution
-            p20Multi.aspirate(spot_vol, plate[x])
-            spot(agar[x], spot_vol)
-        p20Multi.drop_tip()
+    # def spot_dilute_half_plate(plate, agar, spot_vol, startCol):
+    #     p20Multi.pick_up_tip()
+    #     for col in range(startCol, startCol+5):
+    #         w = "A"+str(col)
+    #         x = "A" + str(col+1)
+    #         spot_then_dilute(plate[w], agar[w], 
+    #                          plate[x], spot_vol)
+    #         #Spot final dilution
+    #         p20Multi.aspirate(spot_vol, plate[x])
+    #         spot(agar[x], spot_vol)
+    #     p20Multi.drop_tip()
 
     
-    def spot_dilute_plate(plate, agar, spot_vol):
-        for c in [1, 7]: spot_dilute_half_plate(plate, agar, spot_vol, c)
+    # def spot_dilute_plate(plate, agar, spot_vol):
+    #     for c in [1, 7]: spot_dilute_half_plate(plate, agar, spot_vol, c)
         
-    for pl, ag in zip(dilutionPlates, agar_plates):
-        spot_dilute_plate(pl, ag, 5)
+    # for pl, ag in zip(dilutionPlates, agar_plates):
+    #     spot_dilute_plate(pl, ag, 5)
         
-    protocol.comment("Run Complete!")
+    # protocol.comment("Run Complete!")
         
         
 

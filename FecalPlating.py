@@ -8,10 +8,10 @@ def run(protocol):
 
 	#Load Tips1
     tips20= [protocol.load_labware('opentrons_96_tiprack_20ul', '9')]
-    tips1000 = [protocol.load_labware('opentrons_96_tiprack_1000ul', '1')]
+    tips20_2 = [protocol.load_labware('opentrons_96_tiprack_20ul', '1')]
 
     p20Multi = protocol.load_instrument("p20_multi_gen2", "left", tip_racks=tips20)
-    p1000Single = protocol.load_instrument("p1000_single", "right", tip_racks=tips1000)
+    p1000Single = protocol.load_instrument("p20_single_gen2", "right", tip_racks=tips20_2)
 
     temp_block = protocol.load_module("tempdeck", 4)
     temp_block.set_temperature(4)
@@ -30,7 +30,7 @@ def run(protocol):
     				for slot in agar_locs]
 
     for p in range(16):
-    	p1000Single.distribute(200, pooTubes.wells()[p], [dilutionPlates[0].wells()[p], 
+    	p1000Single.distribute(10, pooTubes.wells()[p], [dilutionPlates[0].wells()[p], 
     		dilutionPlates[1].wells()[p]] if p < 8 
     		else [dilutionPlates[2].wells()[p-8], dilutionPlates[3].wells()[p-8]])
            
@@ -52,7 +52,7 @@ def run(protocol):
     def spot_then_dilute(sourceCol, agar_dest, destcol, spot_vol):
         p20Multi.aspirate(spot_vol, sourceCol)
         spot(agar_dest, spot_vol)
-        p20Multi.transfer(20, sourceCol, destcol, mix_after=(5, 20), new_tip="never")
+        p20Multi.transfer(10, sourceCol, destcol, mix_after=(5, 20), new_tip="never")
         
     
     def spot_dilute_plate(plate, agar, spot_vol):
