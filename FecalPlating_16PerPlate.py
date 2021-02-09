@@ -38,7 +38,7 @@ def run(protocol):
 
 
     for p in range(32):
-        p20Multi.pick_up_tip(reversedTips[p])
+        p20Multi.pick_up_tip(reversedTips[p], presses=2, increment = 0.1)
         p20Multi.aspirate(20, pooWells[p])
         p20Multi.dispense(10, dest_wells_r1[p])
         p20Multi.dispense(10, dest_wells_r2[p])
