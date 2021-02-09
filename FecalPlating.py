@@ -29,10 +29,10 @@ def run(protocol):
     agar_plates = [protocol.load_labware(agar_plate_type, slot, label="Agar")
     				for slot in agar_locs]
 
-    for p in range(16):
-    	p1000Single.distribute(10, pooTubes.wells()[p], [dilutionPlates[0].wells()[p], 
-    		dilutionPlates[1].wells()[p]] if p < 8 
-    		else [dilutionPlates[2].wells()[p-8], dilutionPlates[3].wells()[p-8]])
+    # for p in range(16):
+    # 	p1000Single.distribute(10, pooTubes.wells()[p], [dilutionPlates[0].wells()[p], 
+    # 		dilutionPlates[1].wells()[p]] if p < 8 
+    # 		else [dilutionPlates[2].wells()[p-8], dilutionPlates[3].wells()[p-8]])
            
             
         
@@ -62,7 +62,7 @@ def run(protocol):
             x = "A" + str(col+1)
             spot_then_dilute(plate[w], agar[w], 
                              plate[x], spot_vol)
-            #Spot final dilution
+            #Spot final dilution THIS S THE PROBLEM, DOUBLE UP WITH LINE 52-55
             p20Multi.aspirate(spot_vol, plate[x])
             spot(agar[x], spot_vol)
         p20Multi.drop_tip()
