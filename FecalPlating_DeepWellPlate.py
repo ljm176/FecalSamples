@@ -10,8 +10,8 @@ def run(protocol):
     tips20= [protocol.load_labware('opentrons_96_tiprack_20ul', '9')]
     tips20_2 = [protocol.load_labware('opentrons_96_tiprack_20ul', '1')]
 
-    p20Multi = protocol.load_instrument("p20_multi_gen2", "left", tip_racks=tips20)
-    p1000Single = protocol.load_instrument("p20_single_gen2", "right", tip_racks=tips20_2)
+    p20Multi = protocol.load_instrument("p20_multi_gen2", "right", tip_racks=tips20)
+    #p1000Single = protocol.load_instrument("p20_single_gen2", "right", tip_racks=tips20_2)
 
 
 
@@ -28,7 +28,7 @@ def run(protocol):
     agar_plates = [protocol.load_labware(agar_plate_type, slot, label="Agar")
     				for slot in agar_locs]
 
-    p20Multi.transfer(20, deepWell["A1"], [d["A1"] for d in dilutionPlates])
+    #p20Multi.transfer(20, deepWell["A1"], [d["A1"] for d in dilutionPlates])
             
         
     def spot(dest, spot_vol):
@@ -36,7 +36,7 @@ def run(protocol):
         in a Nunc omnitray"""
 
         SAFE_HEIGHT = 15  
-        spotting_dispense_rate=0.025 
+        spotting_dispense_rate=0.25 
         p20Multi.move_to(dest.top(SAFE_HEIGHT))
         protocol.max_speeds["Z"] = 50
         p20Multi.move_to(dest.top(2))
@@ -45,21 +45,22 @@ def run(protocol):
         del protocol.max_speeds["Z"]
     
     def spot_then_dilute(sourceCol, agar_dest, destcol, spot_vol):
+        p20Multi.mix(3, 20, sourceCol)
         p20Multi.aspirate(spot_vol, sourceCol)
         spot(agar_dest, spot_vol)
-        p20Multi.transfer(10, sourceCol, destcol, mix_after=(5, 20), new_tip="never")
+        p20Multi.transfer(10, sourceCol, destcol, mix_after=(3, 20), new_tip="never")
         
     
     def spot_dilute_plate(plate, agar, spot_vol):
         p20Multi.pick_up_tip()
-        for col in range(1, 10):
+        for col in range(1, 12):
             w = "A"+str(col)
             x = "A" + str(col+1)
             spot_then_dilute(plate[w], agar[w], 
                              plate[x], spot_vol)
             #Spot final dilution THIS S THE PROBLEM, DOUBLE UP WITH LINE 52-55
-            p20Multi.aspirate(spot_vol, plate[x])
-            spot(agar[x], spot_vol)
+        p20Multi.aspirate(spot_vol, plate[x])
+        spot(agar[x], spot_vol)
         p20Multi.drop_tip()
         
     for pl, ag in zip(dilutionPlates, agar_plates):
