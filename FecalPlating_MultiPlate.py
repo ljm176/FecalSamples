@@ -31,7 +31,7 @@ def run(protocol):
         in a Nunc omnitray"""
 
         SAFE_HEIGHT = 15  
-        spotting_dispense_rate=0.025 
+        spotting_dispense_rate=0.25 
         p20Multi.move_to(dest.top(SAFE_HEIGHT))
         protocol.max_speeds["Z"] = 50
         p20Multi.move_to(dest.top(2))
@@ -42,12 +42,12 @@ def run(protocol):
     def spot_then_dilute(sourceCol, agar_dest, destcol, spot_vol):
         p20Multi.aspirate(spot_vol, sourceCol)
         spot(agar_dest, spot_vol)
-        p20Multi.transfer(10, sourceCol, destcol, mix_after=(5, 20), new_tip="never")
+        p20Multi.transfer(20, sourceCol, destcol, mix_after=(5, 20), new_tip="never")
         
     
     def spot_dilute_plate(plate, agar, spot_vol):
         p20Multi.pick_up_tip()
-        for col in range(1, 10):
+        for col in range(1, 12):
             w = "A"+str(col)
             x = "A" + str(col+1)
             spot_then_dilute(plate[w], agar[w], 
