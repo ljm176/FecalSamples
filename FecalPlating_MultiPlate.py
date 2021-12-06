@@ -11,7 +11,6 @@ def run(protocol):
 
 
     p20Multi = protocol.load_instrument("p20_multi_gen2", "left", tip_racks=tips20)
-  
 
 
     plate_type = "corning_96_wellplate_360ul_flat"
@@ -47,14 +46,14 @@ def run(protocol):
     
     def spot_dilute_plate(plate, agar, spot_vol):
         p20Multi.pick_up_tip()
-        for col in range(1, 12):
-            w = "A"+str(col)
+        for col in range(1, 10):
+            w = "A" + str(col)
             x = "A" + str(col+1)
             spot_then_dilute(plate[w], agar[w], 
                              plate[x], spot_vol)
             #Spot final dilution THIS S THE PROBLEM, DOUBLE UP WITH LINE 52-55
-            p20Multi.aspirate(spot_vol, plate[x])
-            spot(agar[x], spot_vol)
+        p20Multi.aspirate(spot_vol, plate[x])
+        spot(agar[x], spot_vol)
         p20Multi.drop_tip()
         
     for pl, ag in zip(dilutionPlates, agar_plates):
